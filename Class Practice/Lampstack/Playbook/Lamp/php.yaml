@@ -1,0 +1,56 @@
+--- 
+- name: installing lamp stack on ubuntu  # IT IS THE PLAY.
+  hosts: all            # WE ARE SAYING THE LIST OF NODES. WHERE WE WANT TO RUN.FOR NOW WE ARE GIVING ALL.
+  become: yes           # RUNNING ALL THE COMMANDS IN SUDO USERS."sudo" MEANS ADMINSTRATIVE ACESS.
+  tasks:
+    - name: updateing the packages   # IT'S A PLAY.HERE, WE HAVE TO WRITE WHAT WE WANT TO DO.
+      ansible.builtin.apt:           # IT IS A MODULE FOR THE "apt" PACKAGE MANAGER.
+        name: apache2
+        update_cache: yes            # IT IS LIKE "sudo apt update". "apt" IS PACKEGE MANAGER FOR "UBUNTU OPERATING SYSTEM"
+        state: present               # WHETHER WE GIVE "state" OR NOT. THE DEFAULT STATE IS PRESENT.
+    - name: installing php           # IT'S A PLAY.HERE, WE HAVE TO WRITE WHAT WE WANT TO DO.
+      ansible.builtin.apt:           # IT IS LIKE "sudo apt update". "apt" IS PACKEGE MANAGER FOR "UBUNTU OPERATING SYSTEM"
+        name:
+          - php
+          - libapache2-mod-php        # HERE, I AM PASSING THE LIST
+          - php-mysql
+        update_cache: yes 
+        state: present                # WHETHER WE GIVE "state" OR NOT. THE DEFAULT STATE IS PRESENT.
+    - name: copying phpinfo           # IT'S A PLAY.HERE, WE HAVE TO WRITE WHAT WE WANT TO DO.
+      ansible.builtin.copy:           # IT IS LIKE COPING FILES FROM LOCAL TO REMOTE.
+        src: info.php                 # "src" means "SOURCE".
+        dest: /var/www/html/info.php  # "dest" means "DESTINATION"
+    - name: restart apache2           # IT'S A PLAY.HERE, WE HAVE TO WRITE WHAT WE WANT TO DO.
+      ansible.builtin.systemd:        # WE CAN CHECK "ansible.builtin.systemd" OR "ansible.builtin.service" FOR SERVICE.
+        name: apache2
+        state: restarted              # WHICH STATE WE WANT, WHETHER RESTART OR STOP
+
+
+# --> Here, we installing "LAMP" stack. "LINUX,APACHE2,MYSQL,PHP". leave the "MYSQL" or now
+# --> I Created The File With Some Content in it.
+# --> Create info.php in Lamp folder. Now I am copying this file from one machine to other machine.
+# --> We Can Create File and Manage also.
+# --> There is something called SFTP and SCP. Which Can do this.
+# --> SCP is Ansible.We can see the modules name "ansible.builtin.copy" copy files to remote locations.
+# --> If we go there examples there is something called as "src"."src" is the machine Where our "Ansible Control Node".
+# --> "Destination" is our "Node".
+# --> We can use "Content" Instead of "src"."src" means file. We have file and we are copying that file.
+      If our content is very less we can use "content" Instead of "src". If the content is one or two lines we can
+      write the content. But, If it is huge, better we have a file for that.
+# --> And we have to write the "destination".
+# --> We are doing the restart apache2. This is for Service in Ansible(or) Systemctl in Ansible.
+# --> If our Manual steps are correst, writeing Ansible playbook is easy.
+
+
+### MANUAL STEPS FOR LAMP STACK ###
+
+#--> sudo apt update
+#--> sudo apt install apache2 -y
+#--> sudo apt install php libapache2-mod-php php-mysql -y
+# Create a file called as /var/www/html/info.php with below content
+# <?php phpinfo(); ?>
+#--> sudo -i
+#--> echo '<?php phpinfo(); ?>' > /var/www/html/info.php
+#--> exit
+#--> sudo systemctl restart apache2
+          
