@@ -1,0 +1,27 @@
+--- 
+- name: installing nginx # IT IS THE PLAY.
+  hosts: all         # WE ARE SAYING THE LIST OF NODES. WHERE WE WANT TO RUN.FOR NOW WE ARE GIVING ALL.
+  become: yes        # RUNNING ALL THE COMMANDS IN SUDO USERS."sudo" MEANS ADMINSTRATIVE ACESS.
+  tasks:
+    - name: install nginx       # IT'S A PLAY.HERE, WE HAVE TO WRITE WHAT WE WANT TO DO.    
+      ansible.builtin.apt:      # IT IS A MODULE FOR THE "apt" PACKAGE MANAGER.
+        name: nginx             
+        update_cache: yes       # IT IS LIKE "sudo apt update". "apt" IS PACKEGE MANAGER FOR "UBUNTU OPERATING SYSTEM"
+        state: present          # WHETHER WE GIVE "state" OR NOT. THE DEFAULT STATE IS PRESENT.
+    - name: nginx starting      # IT'S A PLAY.HERE, WE HAVE TO WRITE WHAT WE WANT TO DO. 
+      ansible.builtin.systemd:  # WE CAN CHECK "ansible.builtin.systemd" OR "ansible.builtin.service" FOR SERVICE.
+        name: nginx             # THIS IS THE WEB SERVER, WHICH WE WANT TO INSTALL
+        state: started          # WHICH STATE WE WANT, WHETHER START OR STOP.THERE ARE FIVE OPTIONS FOR THE STATE.
+
+# --> Here, I am Writeing Ansible Palybook for nginx.
+# --> nginx is a webserver.
+# --> Playbook is a collection of tasks.
+# --> In ansible work is done by Modules.
+
+
+### MANUAL STEPS FOR NGINX ###
+
+# --> sudo apt update              - "apt" is package manager for ubuntu. It updates the package definitions.(Advanced Package Tool(APT))
+# --> sudo apt install nginx -y
+# --> sudo systemctl status nginx  - checking the status whether it is in running state or not.
+
