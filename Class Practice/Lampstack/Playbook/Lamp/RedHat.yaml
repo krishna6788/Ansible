@@ -1,0 +1,55 @@
+--- 
+- name: installing lamp stack on redhat    # IT IS THE PLAY.
+  hosts: all           # WE ARE SAYING THE LIST OF NODES. WHERE WE WANT TO RUN.FOR NOW WE ARE GIVING ALL.
+  become: yes          # RUNNING ALL THE COMMANDS IN SUDO USERS."sudo" MEANS ADMINSTRATIVE ACESS.
+  tasks:
+    - name: installing apache2    # IT'S A PLAY.HERE, WE HAVE TO WRITE WHAT WE WANT TO DO.
+      ansible.builtin.yum:        # IT IS A MODULE FOR THE "yum" PACKAGE MANAGER for "RedHat".
+        name: httpd               # "httpd" IS A WEB SERVER(APACHE).
+        state: present            # WHETHER WE GIVE "state" OR NOT. THE DEFAULT STATE IS PRESENT.
+    - name: enabling the apache server    # IT'S A PLAY.HERE, WE HAVE TO WRITE WHAT WE WANT TO DO.
+      ansible.builtin.systemd:   # WE CAN CHECK "ansible.builtin.systemd" OR "ansible.builtin.service" FOR SERVICE.
+        name: httpd              # "httpd" IS A WEB SERVER(APACHE)
+        enabled: yes             # IT IS LIKE "sudo yum update". "yum" IS PACKEGE MANAGER FOR "REDHAT OPERATING SYSTEM"
+        state: started           # WHETHER WE GIVE "state" OR NOT. 
+    - name: installing php       # IT'S A PLAY.HERE, WE HAVE TO WRITE WHAT WE WANT TO DO.
+      ansible.builtin.yum:       # IT IS A MODULE FOR THE "yum" PACKAGE MANAGER for "RedHat".
+        name: php                # "php" IS A PAGE FOR "httpd"(APACHE).
+        update_cache: yes        # IT IS LIKE "sudo yum update". "yum" IS PACKEGE MANAGER FOR "REDHAT OPERATING SYSTEM"
+        state: present           # WHETHER WE GIVE "state" OR NOT. THE DEFAULT STATE IS PRESENT.
+    - name: copying the php file      # IT'S A PLAY.HERE, WE HAVE TO WRITE WHAT WE WANT TO DO.
+      ansible.builtin.copy:           # IT IS LIKE COPING FILES FROM LOCAL TO REMOTE.
+        src: info.php                 # "src" means "SOURCE".
+        dest: /var/www/html/info.php  # "dest" means "DESTINATION"
+    - name: restarting the apache2    # IT'S A PLAY.HERE, WE HAVE TO WRITE WHAT WE WANT TO DO.
+      ansible.builtin.systemd:        # WE CAN CHECK "ansible.builtin.systemd" OR "ansible.builtin.service" FOR SERVICE.
+        name: httpd                   # "httpd" IS A WEB SERVER(APACHE)
+        state: restarted              # WHICH STATE WE WANT, WHETHER RESTART OR STOP
+
+
+--> Here, we installing "LAMP" stack. "LINUX,APACHE2,MYSQL,PHP". leave the "MYSQL" or now
+--> I Created The File With Some Content in it.
+--> Create info.php in Lamp folder. Now I am copying this file from one machine to other machine.
+--> We Can Create File and Manage also.
+--> There is something called SFTP and SCP. Which Can do this.
+--> SCP is Ansible.We can see the modules name "ansible.builtin.copy" copy files to remote locations.
+--> If we go there examples there is something called as "src"."src" is the machine Where our "Ansible Control Node".
+--> "Destination" is our "Node".
+--> We can use "Content" Instead of "src"."src" means file. We have file and we are copying that file.
+    If our content is very less we can use "content" Instead of "src". If the content is one or two lines we can
+    write the content. But, If it is huge, better we have a file for that.
+--> And we have to write the "destination".
+--> We are doing the restart apache2. This is for Service in Ansible(or) Systemctl in Ansible.
+--> If our Manual steps are correst, writeing Ansible playbook is easy.
+
+
+--MANUAL STEPS FOR LAMP STACK REDHAT--
+
+--> sudo yum install httpd -y
+--> sudo systemctl enable httpd
+--> sudo systemctl start httpd
+--> sudo yum install php -y
+--> sudo -i
+--> echo '<?php phpinfo(); ?>' > /var/www/html/info.php
+--> exit
+--> sudo systemctl restart httpd
